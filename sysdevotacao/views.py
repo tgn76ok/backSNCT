@@ -8,7 +8,7 @@ from rest_framework.generics import CreateAPIView, GenericAPIView,ListAPIView,Up
 from rest_framework.permissions import IsAdminUser
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
-
+from rest_framework.throttling import AnonRateThrottle
 
 class PaginateionTrumas(PageNumberPagination):
     page_size =10
@@ -16,7 +16,7 @@ class PaginateionTrumas(PageNumberPagination):
     max_page_size = 100
 
 class turmaLista(GenericAPIView):
-
+    throttle_classes = [AnonRateThrottle]
     queryset = turmas.objects.all().order_by('-votos')
     serializer_class = TurmaSerializer
     pagination_class = PaginateionTrumas
@@ -32,16 +32,7 @@ class turmaLista(GenericAPIView):
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
-    def get_queryset(self, *args, **kwargs):
-        search_term = self.request.POST.get('serch', '')
-        qs = super().get_queryset(*args, **kwargs)
-        if search_term:
-            qs = qs.filter(
-                Q(
-                    Q(escolaID__name__icontains=search_term),
-                )
-            )
-        return qs
+   
     
 
 class turmaCriar(CreateAPIView):
@@ -59,12 +50,16 @@ class turmadetelhes(RetrieveUpdateDestroyAPIView):
 
 
 class Votacao(UpdateAPIView):
-    queryset = turmas.objects.all()
     serializer_class = VotacaoSerializer
+
+    def get_queryset(self):
+        qs =turmas.objects.filter(id=self.kwargs['pk'])
+        return qs
+    
 
     def partial_update(self, request, *args, **kwargs):
         id = kwargs['pk']
-        turma = turmas.objects.get(id=id)
+        turma = self.get_queryset().first()
 
         turma.votos += 1
 

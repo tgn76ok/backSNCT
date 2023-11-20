@@ -13,10 +13,8 @@ class turmas(models.Model):
     nomeAplicativo = models.CharField(max_length=180)
     linkYoutube = models.CharField(max_length=180)
     nomeEquipe =  models.CharField(max_length=180)
- 
-    votos = models.PositiveIntegerField(default=0)
+    votos = models.PositiveBigIntegerField(default=0)
 
-    escolaID = models.ForeignKey(escola,on_delete=models.CASCADE)
 
     def __str__(self):
         return self.titulo

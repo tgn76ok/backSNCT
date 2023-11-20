@@ -40,9 +40,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     #apps
-    'sysdevotacao',
+    'sysdevotacao.apps.SysdevotacaoConfig',
      # CORS
     'corsheaders',
+    #pool
+
 ]
 
 MIDDLEWARE = [
@@ -88,21 +90,33 @@ WSGI_APPLICATION = 'Votacao.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'mysql.connector.django',
+        'NAME' : 'u342035410_festcode',
+        'USER' : 'u342035410_festcode',
+        'PASSWORD' : 'AVNS_l-Zjx08MzODmTbZuV1K' ,
+        'HOST' : '185.28.21.204',
+        'PORT' : '3306',
+        'CONN_MAX_AGE': 60*60,  # Tempo máximo de vida da conexão em segundos
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+            'charset': 'utf8mb4',
+            'use_unicode': True,
+            'pool_size': 20,  # Número de conexões no pool
+            # Outras opções específicas do pool podem ser configuradas aqui
+        },
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
     }
 }
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': os.environ.get('DB_NAME', 'nome_do_banco'),
-#         'USER': os.environ.get('DB_USER', 'nome_do_user'),
-#         'PASSWORD': os.environ.get('DB_PASS', 'senha_do_user'),
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#     }
-# }
+REST_FRAMEWORK = {
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '100/minute',
+    }
+}
+
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 

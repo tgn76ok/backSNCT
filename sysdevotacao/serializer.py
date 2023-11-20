@@ -14,7 +14,6 @@ class EscolaSerializer(serializers.ModelSerializer):
 
 class TurmaSerializer(serializers.ModelSerializer):
 
-    # nomeEscola = serializers.PrimaryKeyRelatedField(source='escolaID.name',read_only='True')
 
     class Meta:
         model = turmas

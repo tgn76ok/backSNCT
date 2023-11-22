@@ -11,7 +11,7 @@ from rest_framework.response import Response
 from rest_framework.throttling import AnonRateThrottle
 
 class PaginateionTrumas(PageNumberPagination):
-    page_size =10
+    page_size =34
     page_query_param = 'page_size'
     max_page_size = 100
 

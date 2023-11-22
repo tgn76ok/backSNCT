@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-74xzg-^q&b8q2_x&q#-=1*l^#v-=@$x%57_=@x-t&9u+&h#yhc
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.1.1','192.168.7.132','127.0.0.1','localhost','192.168.15.150','26.226.78.158']
+ALLOWED_HOSTS = ['127.0.1.1','192.168.7.132','127.0.0.1','localhost','192.168.15.56','26.226.78.158']
 APPEND_SLASH=False
 
 # Application definition
@@ -90,22 +90,18 @@ WSGI_APPLICATION = 'Votacao.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'mysql.connector.django',
+        'ENGINE': 'dj_db_conn_pool.backends.mysql',
         'NAME' : 'u342035410_festcode',
         'USER' : 'u342035410_festcode',
         'PASSWORD' : 'AVNS_l-Zjx08MzODmTbZuV1K' ,
         'HOST' : '185.28.21.204',
         'PORT' : '3306',
-        'CONN_MAX_AGE': 60*60,  # Tempo máximo de vida da conexão em segundos
-        'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-            'charset': 'utf8mb4',
-            'use_unicode': True,
-            'pool_size': 20,  # Número de conexões no pool
-            # Outras opções específicas do pool podem ser configuradas aqui
+    },
+    'POOL_OPTIONS' : {
+            'POOL_SIZE': 5,
+            'MAX_OVERFLOW': 10,
+            'RECYCLE':-1
         },
-        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
-    }
 }
 
 REST_FRAMEWORK = {
@@ -153,7 +149,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
-
+STATICFILES_DIRS = [
+    BASE_DIR / 'base_static',
+]
+STATIC_ROOT = BASE_DIR / 'static'
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 MEDIA_URL = '/media/'
 # Default primary key field type

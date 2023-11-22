@@ -21,7 +21,7 @@ from django.conf.urls.static import static
 from sysdevotacao.views import turmaLista,turmadetelhes
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('Turma/', include('sysdevotacao.urls'),name='turmas'),
+    path('turma/', include('sysdevotacao.urls'),name='turmas'),
 
     path('api-auth/', include('rest_framework.urls'))
 ]
